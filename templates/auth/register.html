@@ -1,0 +1,288 @@
+{% extends 'auth/base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="auth-page-wrapper">
+
+  <!-- ── Left brand panel ── -->
+  <div class="auth-brand-panel">
+    <div class="auth-brand-inner">
+
+      <div class="auth-brand-logo">
+        <img src="{% static 'assets/images/pti_logo.png' %}" alt="PTI Logo"/>
+        <span>PTI Clearance</span>
+      </div>
+
+      <h1 class="auth-brand-headline">
+        Start your clearance<br/>
+        journey today.
+      </h1>
+
+      <p class="auth-brand-sub">
+        Create your student account in two quick steps. Once registered,
+        upload your documents and track approvals across all departments.
+      </p>
+
+      <ul class="auth-feature-list">
+        <li>
+          <span class="auth-feature-icon"><i class="fas fa-user-plus"></i></span>
+          Quick two-step registration
+        </li>
+        <li>
+          <span class="auth-feature-icon"><i class="fas fa-cloud-upload-alt"></i></span>
+          Upload documents instantly
+        </li>
+        <li>
+          <span class="auth-feature-icon"><i class="fas fa-tasks"></i></span>
+          Track clearance across all departments
+        </li>
+        <li>
+          <span class="auth-feature-icon"><i class="fas fa-certificate"></i></span>
+          Download Statement of Result
+        </li>
+      </ul>
+
+    </div>
+  </div>
+  <!-- /brand panel -->
+
+  <!-- ── Right form panel ── -->
+  <div class="auth-form-panel">
+    <div class="auth-form-box">
+
+      <div class="auth-form-header">
+        <h1>Create your account</h1>
+        <p>Enter your personal details to begin the clearance process.</p>
+      </div>
+
+      <div class="auth-form-card">
+
+        <!-- Step indicator -->
+        <div class="auth-steps" id="stepIndicator">
+          <div class="auth-step active" id="indicator-1">
+            <span class="auth-step-num">1</span>
+            <span class="auth-step-label">Personal Info</span>
+          </div>
+          <div class="auth-step-line"></div>
+          <div class="auth-step" id="indicator-2">
+            <span class="auth-step-num">2</span>
+            <span class="auth-step-label">Academic Info</span>
+          </div>
+        </div>
+
+        <form class="theme-form" method="post" action="" id="registerForm">
+          {% csrf_token %}
+
+          <!-- ── Step 1 ── -->
+          <div id="step-1" class="register-step">
+
+            <div class="form-group">
+              <label class="col-form-label pt-0">
+                Full Name <span class="text-danger">*</span>
+              </label>
+              <input class="form-control" type="text" name="fullname" required
+                     placeholder="Enter your full name"
+                     value="{{ form_data.fullname|default:'' }}"/>
+            </div>
+
+            <div class="form-group">
+              <label class="col-form-label">
+                Matric Number <span class="text-danger">*</span>
+              </label>
+              <input class="form-control" type="text" name="mat_no" required
+                     placeholder="e.g., 20/1234/CS"
+                     value="{{ form_data.mat_no|default:'' }}"/>
+            </div>
+
+            <div class="form-group">
+              <label class="col-form-label">
+                Email Address <span class="text-danger">*</span>
+              </label>
+              <input class="form-control" type="email" name="email" required
+                     placeholder="your.email@example.com"
+                     value="{{ form_data.email|default:'' }}"/>
+            </div>
+
+            <div class="form-group">
+              <label class="col-form-label">
+                Password <span class="text-danger">*</span>
+              </label>
+              <div class="form-input position-relative">
+                <input class="form-control" type="password" name="password" required
+                       placeholder="Minimum 6 characters" minlength="6"/>
+                <div class="show-hide"><span class="show"></span></div>
+              </div>
+              <small class="text-muted">Password must be at least 6 characters long</small>
+            </div>
+
+            <div class="form-group mb-0 checkbox-checked text-end">
+              <button type="button" class="btn btn-primary mt-2" id="nextBtn"
+                      onclick="validateStep1()">
+                Continue <i class="fas fa-arrow-right ms-1"></i>
+              </button>
+            </div>
+
+          </div>
+          <!-- /step-1 -->
+
+          <!-- ── Step 2 ── -->
+          <div id="step-2" class="register-step" style="display:none;">
+
+            <div class="form-group">
+              <label class="col-form-label">
+                Department <span class="text-danger">*</span>
+              </label>
+              <select class="form-control" name="department" required>
+                <option value="" disabled {% if not form_data.department_id %}selected{% endif %}>
+                  Select Your Department
+                </option>
+                {% for dept in departments %}
+                  <option value="{{ dept.id }}"
+                    {% if form_data.department_id == dept.id|stringformat:"s" %}selected{% endif %}>
+                    {{ dept.title }}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="col-form-label">
+                Level <span class="text-danger">*</span>
+              </label>
+              <select class="form-control" name="level" required>
+                <option value="" disabled {% if not form_data.level_title %}selected{% endif %}>
+                  Select Your Level
+                </option>
+                {% for level in levels %}
+                  <option value="{{ level }}"
+                    {% if form_data.level_title == level %}selected{% endif %}>
+                    {{ level }}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="col-form-label">
+                First Hostel Room No
+              </label>
+              <input class="form-control" type="text" name="first_hostel_room_no"
+                     placeholder="e.g., A201"
+                     value="{{ form_data.first_hostel_room_no|default:'' }}"/>
+            </div>
+
+            <div class="form-group">
+              <label class="col-form-label">
+                Last Hostel Room No
+              </label>
+              <input class="form-control" type="text" name="last_hostel_room_no"
+                     placeholder="e.g., C105"
+                     value="{{ form_data.last_hostel_room_no|default:'' }}"/>
+            </div>
+
+            <div class="form-group">
+              <label class="col-form-label">
+                Date of Completion <span class="text-danger">*</span>
+              </label>
+              <input class="form-control" type="date" name="date_of_completion" required
+                     value="{{ form_data.date_of_completion|default:'' }}"/>
+            </div>
+
+            <div class="form-group mb-0 checkbox-checked d-flex justify-content-between">
+              <button type="button" class="btn btn-secondary mt-2" id="backBtn">
+                <i class="fas fa-arrow-left me-1"></i> Back
+              </button>
+              <button class="btn btn-success mt-2" type="submit" id="submitBtn">
+                <i class="fas fa-user-plus me-1"></i> Create Account
+              </button>
+            </div>
+
+            <p class="mt-4 mb-0 text-center"
+               style="font-size:13.5px;color:var(--text-secondary);">
+              Already have an account?
+              <a class="ms-1" href="{% url 'login' %}"
+                 style="color:var(--accent);font-weight:600;">Sign in</a>
+            </p>
+
+          </div>
+          <!-- /step-2 -->
+
+        </form>
+
+      </div><!-- /auth-form-card -->
+    </div>
+  </div>
+  <!-- /form panel -->
+
+</div><!-- /auth-page-wrapper -->
+
+<script>
+  function showStep2() {
+    document.getElementById('step-1').style.display = 'none';
+    document.getElementById('step-2').style.display = 'block';
+    document.getElementById('indicator-1').classList.remove('active');
+    document.getElementById('indicator-1').classList.add('done');
+    document.getElementById('indicator-2').classList.add('active');
+  }
+
+  function showStep1() {
+    document.getElementById('step-2').style.display = 'none';
+    document.getElementById('step-1').style.display = 'block';
+    document.getElementById('indicator-2').classList.remove('active');
+    document.getElementById('indicator-1').classList.remove('done');
+    document.getElementById('indicator-1').classList.add('active');
+  }
+
+  function validateStep1() {
+    const fullname = document.querySelector('input[name="fullname"]').value.trim();
+    const matNo    = document.querySelector('input[name="mat_no"]').value.trim();
+    const email    = document.querySelector('input[name="email"]').value.trim();
+    const password = document.querySelector('input[name="password"]').value;
+
+    let errors = [];
+    if (!fullname)  errors.push('Full name is required.');
+    if (!matNo)     errors.push('Matric number is required.');
+    if (!email)     errors.push('Email address is required.');
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.push('Please enter a valid email address.');
+    if (!password)         errors.push('Password is required.');
+    else if (password.length < 6) errors.push('Password must be at least 6 characters long.');
+
+    if (errors.length) { alert(errors.join('\n')); return; }
+    showStep2();
+  }
+
+  document.getElementById('nextBtn').onclick  = validateStep1;
+  document.getElementById('backBtn').onclick  = showStep1;
+
+  document.getElementById('registerForm').onsubmit = function (e) {
+    const department = document.querySelector('select[name="department"]').value;
+    const level      = document.querySelector('select[name="level"]').value;
+    const dateGrad    = document.querySelector('input[name="date_of_completion"]').value.trim();
+
+    if (!department) { alert('Please select your department.'); e.preventDefault(); return false; }
+    if (!level)      { alert('Please select your level.');      e.preventDefault(); return false; }
+    if (!dateGrad)    { alert('Please enter your date of completion.'); e.preventDefault(); return false; }
+
+    const btn = document.getElementById('submitBtn');
+    btn.innerHTML  = '<i class="fas fa-spinner fa-spin me-1"></i> Creating Account…';
+    btn.disabled   = true;
+    return true;
+  };
+
+  // If server returned form_data (validation error), jump to step 2
+  {% if form_data %}
+    showStep2();
+  {% endif %}
+
+  // Password show/hide
+  document.querySelector('.show-hide').onclick = function () {
+    const input = document.querySelector('input[name="password"]');
+    const span  = this.querySelector('.show');
+    if (input.type === 'password') { input.type = 'text';     span.classList.add('hide'); }
+    else                           { input.type = 'password'; span.classList.remove('hide'); }
+  };
+</script>
+
+{% endblock %}

@@ -1,0 +1,245 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="page-body">
+  <div class="container-fluid">
+
+    <!-- Page title -->
+    <div class="page-title">
+      <div class="row align-items-center">
+        <div class="col">
+          <h2>{{ dept_info.name }} Clearance</h2>
+          <p class="mb-0 text-title-gray">
+            Review your clearance status and feedback from {{ dept_info.staff_name }}
+          </p>
+        </div>
+        <div class="col-auto">
+          <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="container-fluid">
+    <div class="row g-3">
+
+      <!-- ── Status hero card ── -->
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body text-center py-5">
+
+            {% if dept_status == 'approved' %}
+              <div class="status-icon-ring approved">
+                <i class="fas fa-check-circle text-success"></i>
+              </div>
+              <h3 class="text-success mb-2" style="font-size:20px;font-weight:700;">
+                Clearance Approved!
+              </h3>
+              <p class="text-muted mb-0" style="max-width:480px;margin:0 auto;">
+                {{ dept_info.staff_name }} has approved all your documents for {{ dept_info.name }}.
+              </p>
+
+            {% elif dept_status == 'pending' %}
+              <div class="status-icon-ring pending">
+                <i class="fas fa-clock text-warning"></i>
+              </div>
+              <h3 class="text-warning mb-2" style="font-size:20px;font-weight:700;">
+                Clearance Pending
+              </h3>
+              <p class="text-muted mb-0" style="max-width:480px;margin:0 auto;">
+                {{ dept_info.staff_name }} is still reviewing your documents. Please check back later.
+              </p>
+
+            {% else %}
+              <div class="status-icon-ring none">
+                <i class="fas fa-cloud-upload-alt text-primary"></i>
+              </div>
+              <h3 class="text-primary mb-2" style="font-size:20px;font-weight:700;">
+                No Documents Uploaded
+              </h3>
+              <p class="text-muted mb-3" style="max-width:480px;margin:0 auto;">
+                Please upload your documents to begin the clearance process.
+              </p>
+              <a href="{% url 'upload_doc' %}" class="btn btn-primary">
+                <i class="fas fa-cloud-upload-alt"></i> Upload Documents
+              </a>
+            {% endif %}
+
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Document status table ── -->
+      <div class="col-lg-8">
+        <div class="card">
+          <div class="card-header">
+            <h5><i class="fas fa-file-alt me-2"></i>Document Status</h5>
+          </div>
+          <div class="card-body p-0">
+            {% if document_status %}
+              <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                  <thead>
+                    <tr>
+                      <th>Document</th>
+                      <th>Status</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for doc in document_status %}
+                    <tr>
+                      <td>
+                        <div class="d-flex align-items-center gap-2">
+                          <div style="
+                            width:34px;height:34px;border-radius:8px;
+                            background:var(--danger-light);
+                            display:flex;align-items:center;justify-content:center;
+                            flex-shrink:0;
+                          ">
+                            <i class="fas fa-file-pdf" style="color:var(--danger);font-size:14px;"></i>
+                          </div>
+                          <span style="font-weight:500;">{{ doc.title }}</span>
+                        </div>
+                      </td>
+                      <td>
+                        {% if doc.approved %}
+                          <span class="badge bg-success">
+                            <i class="fas fa-check"></i> Approved
+                          </span>
+                        {% else %}
+                          <span class="badge bg-warning">
+                            <i class="fas fa-clock"></i> Pending
+                          </span>
+                        {% endif %}
+                      </td>
+                      <td>
+                        {% if doc.file %}
+                          <a href="{{ doc.file.url }}" target="_blank"
+                             class="btn btn-outline-primary btn-sm">
+                            <i class="fas fa-eye"></i> View
+                          </a>
+                        {% else %}
+                          <span class="text-muted" style="font-size:12px;">—</span>
+                        {% endif %}
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            {% else %}
+              <div class="text-center py-5">
+                <div style="
+                  width:60px;height:60px;border-radius:50%;
+                  background:var(--surface-2);
+                  display:flex;align-items:center;justify-content:center;
+                  margin:0 auto 14px;
+                ">
+                  <i class="fas fa-file-upload" style="font-size:22px;color:var(--text-muted);"></i>
+                </div>
+                <h6 class="text-muted mb-1">No Documents Found</h6>
+                <p class="text-muted mb-3" style="font-size:13px;">
+                  You haven't uploaded any documents yet.
+                </p>
+                <a href="{% url 'upload_doc' %}" class="btn btn-primary btn-sm">
+                  <i class="fas fa-upload"></i> Upload Documents
+                </a>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Feedback panel ── -->
+      <div class="col-lg-4">
+        <div class="card h-100">
+          <div class="card-header">
+            <h5><i class="fas fa-comments me-2"></i>Feedback &amp; Comments</h5>
+          </div>
+          <div class="card-body">
+            {% if feedback_list %}
+              <div style="max-height:360px;overflow-y:auto;padding-right:4px;">
+                {% for feedback in feedback_list %}
+                <div class="feedback-item">
+                  <div class="d-flex justify-content-between align-items-start mb-1">
+                    <small class="fw-600" style="color:var(--accent);">
+                      {{ feedback.reviewer }}
+                    </small>
+                    <small class="text-muted">{{ feedback.date|date:"M d, Y" }}</small>
+                  </div>
+                  <p class="mb-1" style="font-size:13.5px;">{{ feedback.message }}</p>
+                  <small class="text-muted" style="font-size:11.5px;">
+                    <i class="fas fa-file me-1"></i>{{ feedback.document_title }}
+                  </small>
+                </div>
+                {% endfor %}
+              </div>
+            {% else %}
+              <div class="text-center py-4">
+                <div style="
+                  width:52px;height:52px;border-radius:50%;
+                  background:var(--surface-2);
+                  display:flex;align-items:center;justify-content:center;
+                  margin:0 auto 12px;
+                ">
+                  <i class="fas fa-comment-slash"
+                     style="font-size:18px;color:var(--text-muted);"></i>
+                </div>
+                <h6 class="text-muted mb-1" style="font-size:14px;">No Feedback Yet</h6>
+                <p class="text-muted mb-0" style="font-size:12.5px;">
+                  {{ dept_info.staff_name }} hasn't provided any feedback yet.
+                </p>
+              </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Quick actions ── -->
+      <div class="col-12">
+        <div class="card">
+          <div class="card-header">
+            <h5><i class="fas fa-bolt me-2"></i>Quick Actions</h5>
+          </div>
+          <div class="card-body">
+            <div class="row g-2">
+              <div class="col-md-3 col-6">
+                <a href="{% url 'upload_doc' %}" class="btn btn-outline-primary w-100 d-flex flex-column align-items-center py-3">
+                  <i class="fas fa-upload mb-2" style="font-size:20px;"></i>
+                  <span>Upload Documents</span>
+                </a>
+              </div>
+              <div class="col-md-3 col-6">
+                <a href="{% url 'my_doc' %}" class="btn btn-outline-info w-100 d-flex flex-column align-items-center py-3">
+                  <i class="fas fa-folder-open mb-2" style="font-size:20px;"></i>
+                  <span>My Documents</span>
+                </a>
+              </div>
+              <div class="col-md-3 col-6">
+                <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary w-100 d-flex flex-column align-items-center py-3">
+                  <i class="fas fa-th-large mb-2" style="font-size:20px;"></i>
+                  <span>Dashboard</span>
+                </a>
+              </div>
+              <div class="col-md-3 col-6">
+                <button class="btn btn-outline-success w-100 d-flex flex-column align-items-center py-3"
+                        onclick="window.print()">
+                  <i class="fas fa-print mb-2" style="font-size:20px;"></i>
+                  <span>Print Status</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /row -->
+  </div><!-- /container-fluid -->
+</div><!-- /page-body -->
+
+{% endblock %}

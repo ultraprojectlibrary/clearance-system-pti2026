@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="page-body">
+  <div class="container-fluid">
+    <div class="page-title">
+      <div class="row align-items-center">
+        <div class="col">
+          <h2>Generated Statements of Result</h2>
+          <p class="mb-0 text-title-gray">All issued Statement of Result documents.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-header">
+        <h5><i class="fas fa-file-alt me-2"></i>Statement of Result Log</h5>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0">
+            <thead>
+              <tr>
+                <th>S/N</th>
+                <th>Student</th>
+                <th>Date Issued</th>
+                <th>Issued By</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in statements %}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    <span style="
+                      width:32px;height:32px;border-radius:8px;
+                      background:var(--teal-light,rgba(0,195,181,.12));
+                      display:flex;align-items:center;justify-content:center;flex-shrink:0;
+                    ">
+                      <i class="fas fa-user" style="font-size:12px;color:var(--teal,#00c3b5);"></i>
+                    </span>
+                    <span style="font-weight:500;">{{ item.student.username }}</span>
+                  </div>
+                </td>
+                <td>{{ item.created|date:"M d, Y" }}</td>
+                <td>{{ item.issued_by.username }}</td>
+                <td>
+                  <a href="{% url 'statement_detail' item.pk %}" class="btn btn-outline-primary btn-sm">
+                    <i class="fas fa-eye"></i> View
+                  </a>
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="5" class="text-center py-5">
+                  <div style="
+                    width:52px;height:52px;border-radius:50%;
+                    background:var(--surface-2,#f5f7fa);
+                    display:flex;align-items:center;justify-content:center;
+                    margin:0 auto 12px;
+                  ">
+                    <i class="fas fa-file-slash" style="font-size:18px;color:#8898aa;"></i>
+                  </div>
+                  <p class="text-muted mb-0" style="font-size:13.5px;">No Statements of Result have been issued yet.</p>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="page-body">
+  <div class="container-fluid">
+    <div class="page-title">
+      <div class="row">
+        <div class="col">
+          <h2>Send Announcement</h2>
+          <p class="mb-0 text-title-gray">Broadcast a message to all students on the platform.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-lg-7 col-md-9">
+        <div class="card">
+          <div class="card-header">
+            <h5><i class="fas fa-bullhorn me-2"></i>New Announcement</h5>
+          </div>
+          <div class="card-body">
+            <form method="post">
+              {% csrf_token %}
+              <div class="form-group mb-3">
+                <label class="form-label">Title</label>
+                {{ form.title }}
+              </div>
+              <div class="form-group mb-4">
+                <label class="form-label">Message</label>
+                {{ form.message }}
+              </div>
+              <div class="text-end">
+                <button type="submit" class="btn btn-primary">
+                  <i class="fas fa-paper-plane me-1"></i> Send Announcement
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

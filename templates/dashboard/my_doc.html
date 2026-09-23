@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="page-body">
+  <div class="container-fluid">
+    <div class="page-title">
+      <div class="row align-items-center">
+        <div class="col">
+          <h2>My Documents</h2>
+          <p class="mb-0 text-title-gray">All documents you have uploaded for clearance.</p>
+        </div>
+        <div class="col-auto">
+          <a href="{% url 'upload_doc' %}" class="btn btn-primary">
+            <i class="fas fa-cloud-upload-alt"></i> Upload New
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-header">
+        <h5><i class="fas fa-folder-open me-2" style="color:var(--teal);"></i>Uploaded Documents</h5>
+      </div>
+      <div class="card-body p-0">
+        <div class="table-responsive">
+          <table class="table table-hover mb-0" id="project-status">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Preview</th>
+                <th>Title</th>
+                <th>Remove</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for doc in documents %}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>
+                  <a href="#" data-bs-toggle="modal" data-bs-target="#imageModal" data-image-url="{{ doc.file.url }}">
+                    <img src="{{ doc.file.url }}" alt="{{ doc.title }}"
+                         style="width:48px;height:48px;object-fit:cover;border-radius:8px;border:1px solid var(--border);cursor:pointer;"/>
+                  </a>
+                </td>
+                <td style="font-weight:500;">{{ doc.title }}</td>
+                <td>
+                  <form action="{% url 'remove_doc' doc.id %}" method="POST" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-danger btn-sm"
+                            onclick="return confirm('Delete this document?')">
+                      <i class="fas fa-trash"></i> Remove
+                    </button>
+                  </form>
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="4" class="text-center py-5">
+                  <div style="width:52px;height:52px;border-radius:50%;background:var(--surface-2);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;">
+                    <i class="fas fa-file-upload" style="font-size:20px;color:var(--text-muted);"></i>
+                  </div>
+                  <p class="text-muted mb-2">No documents uploaded yet.</p>
+                  <a href="{% url 'upload_doc' %}" class="btn btn-primary btn-sm">
+                    <i class="fas fa-upload"></i> Upload Documents
+                  </a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Image preview modal -->
+<div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="imageModalLabel">Document Preview</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <img src="" id="modalImage" class="img-fluid" alt="Document"/>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var imageModal = document.getElementById('imageModal');
+  imageModal.addEventListener('show.bs.modal', function (event) {
+    var btn = event.relatedTarget;
+    var url = btn.getAttribute('data-image-url');
+    imageModal.querySelector('#modalImage').src = url;
+  });
+</script>
+
+{% endblock %}

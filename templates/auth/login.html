@@ -1,0 +1,133 @@
+{% extends 'auth/base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="auth-page-wrapper">
+
+  <!-- ── Left brand panel ── -->
+  <div class="auth-brand-panel">
+    <div class="auth-brand-inner">
+
+      <div class="auth-brand-logo">
+        <img src="{% static 'assets/images/pti_logo.png' %}" alt="PTI Logo"/>
+        <span>PTI Clearance</span>
+      </div>
+
+      <h1 class="auth-brand-headline">
+        Complete your clearance<br/>
+        with confidence.
+      </h1>
+
+      <p class="auth-brand-sub">
+        A unified portal for students and staff to manage the entire
+        institutional clearance process — from document upload to final approval.
+      </p>
+
+      <ul class="auth-feature-list">
+        <li>
+          <span class="auth-feature-icon"><i class="fas fa-shield-alt"></i></span>
+          Secure multi-department workflow
+        </li>
+        <li>
+          <span class="auth-feature-icon"><i class="fas fa-bell"></i></span>
+          Real-time feedback from reviewers
+        </li>
+        <li>
+          <span class="auth-feature-icon"><i class="fas fa-file-check"></i></span>
+          Digital Statement of Result generation
+        </li>
+        <li>
+          <span class="auth-feature-icon"><i class="fas fa-users"></i></span>
+          All departments in one place
+        </li>
+      </ul>
+
+    </div>
+  </div>
+  <!-- /brand panel -->
+
+  <!-- ── Right form panel ── -->
+  <div class="auth-form-panel">
+    <div class="auth-form-box">
+
+      <div class="auth-form-header">
+        <h1>Welcome back</h1>
+        <p>Enter your email or matric number &amp; password to sign in.</p>
+      </div>
+
+      <div class="auth-form-card">
+        <form class="theme-form" method="post">
+          {% csrf_token %}
+
+          <div class="form-group">
+            <label class="col-form-label">Email or Matric Number</label>
+            <input class="form-control" type="text" required="" name="email"
+                   placeholder="your.email@example.com or 20/1234/CS"/>
+          </div>
+
+          <div class="form-group">
+            <label class="col-form-label">Password</label>
+            <div class="form-input position-relative">
+              <input class="form-control" type="password" name="password"
+                     id="password-field" required="" placeholder="••••••••"/>
+              <div class="show-hide">
+                <svg id="togglePassword" xmlns="http://www.w3.org/2000/svg"
+                     width="18" height="18" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2"
+                     stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                  <line x1="1" y1="1" x2="23" y2="23"></line>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group mb-0 checkbox-checked">
+            <div class="form-check checkbox-solid-info">
+              <!-- Remember password checkbox removed by design -->
+            </div>
+            <div class="mt-4">
+              <button class="btn btn-primary btn-block w-100" type="submit">
+                <i class="fas fa-sign-in-alt"></i> Sign in
+              </button>
+            </div>
+          </div>
+
+          <p class="mt-4 mb-0 text-center" style="font-size:13.5px;color:var(--text-secondary);">
+            Don't have an account?
+            <a class="ms-1 fw-600" href="{% url 'register' %}" style="color:var(--accent);font-weight:600;">
+              Create Account
+            </a>
+          </p>
+
+        </form>
+      </div><!-- /auth-form-card -->
+
+    </div>
+  </div>
+  <!-- /form panel -->
+
+</div><!-- /auth-page-wrapper -->
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const showHideContainer = document.querySelector('.show-hide');
+    const passwordField     = document.getElementById('password-field');
+    if (!showHideContainer || !passwordField) return;
+
+    const eyeSvg = `<svg id="togglePassword" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
+    const eyeSlashSvg = `<svg id="togglePassword" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`;
+
+    showHideContainer.addEventListener('click', function () {
+      const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+      passwordField.setAttribute('type', type);
+      showHideContainer.innerHTML = type === 'text' ? eyeSvg : eyeSlashSvg;
+    });
+  });
+</script>
+
+<script src="{% static 'assets/js/password.js' %}"></script>
+
+{% endblock %}

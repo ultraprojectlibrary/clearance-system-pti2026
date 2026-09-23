@@ -1,0 +1,372 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petroleum Training Institute - Result Notification</title>
+    <style>
+
+        .document {
+            max-width: 210mm;
+            min-height: 297mm;
+            background: white;
+            margin: 0 auto;
+            padding: 40px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .document-border {
+            position: relative;
+            padding: 40px;
+            margin-top: 30px;
+        }
+        
+        .document-border::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border: 2px solid #000;
+            border-top: none;
+        }
+        
+          .document-border::after {
+          content: "PETROLEUM TRAINING INSTITUTE, P.M.B. 20, Effurun, Delta State, Nigeria";
+          position: absolute;
+          top: -12px;
+          left: 60%;
+          transform: translateX(-50%);
+          background: white;
+          padding: 0 10px;
+          font-size: 14px;
+          font-weight: bold;
+          font-family: 'Times New Roman', serif;
+        }
+        
+        .top-border {
+            position: absolute;
+            top: 0;
+            left: 2px;   /* start 10px in from the left */
+            right: 2px;  /* end 10px before the right edge */
+            height: 2px;
+            background-color: #000;
+        }            
+
+
+        
+        .header {
+            position: relative;
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            position: absolute;
+            top: -50px;
+            left: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: white;
+            z-index: 10;
+        }
+        
+        .logo img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-top: -1em;
+        }
+        
+        .institute-name {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 18px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            background-color: white;
+            padding: 0 15px;
+            z-index: 10;
+            white-space: nowrap;
+        }
+        
+        .address {
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            font-style: italic;
+            background-color: white;
+            padding: 0 10px;
+            z-index: 10;
+            white-space: nowrap;
+        }
+        
+        .contact-info {
+            font-size: 10px;
+            margin-bottom: 20px;
+            text-align: right;
+            margin-top: 30px;
+        }
+        
+        .email-info {
+            font-size: 10px;
+            text-align: right;
+            margin-top: 10px;
+        }
+        
+        .reference-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin: 30px 0;
+        }
+        
+        .reference-left {
+            flex: 1;
+        }
+        
+        .reference-right {
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+        }
+        
+        .photo-placeholder {
+            width: 120px;
+            height: 150px;
+            border: 2px solid #000;
+            background-color: #f0f0f0;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        
+        .photo {
+            width: 120px;
+            height: 150px;
+            border: 2px solid #000;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+        
+        .date-info {
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        
+        .student-info {
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+        
+        .mat-number {
+            font-size: 14px;
+            font-weight: normal;
+        }
+        
+        .greeting {
+            margin: 30px 0 20px 0;
+            font-size: 14px;
+        }
+        
+        .notification-title {
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: underline;
+            margin: 30px 0 10px 0;
+        }
+        
+        .exam-title {
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            text-decoration: underline;
+            margin-bottom: 30px;
+        }
+        
+        .content-paragraph {
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+        
+        .signature-section {
+            margin-top: 60px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: flex-end;
+        }
+        
+        .signature-block {
+            text-align: right;
+        }
+        
+        .signature-line {
+            margin-top: 40px;
+            margin-bottom: 5px;
+        }
+        
+        .registrar-info {
+            font-size: 14px;
+            font-weight: bold;
+        }
+        
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            
+            .document {
+                box-shadow: none;
+                margin: 0;
+                padding: 40px;
+            }
+            
+            .print-button {
+                display: none;
+            }
+        }
+        
+        .print-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+
+    {% if statement %}
+    <button class="print-button" onclick="window.print()">Print Document</button>
+    
+    <div class="document">
+        <div class="document-border">
+          <div class="top-border"></div>
+        <!-- Header Section -->
+        <div class="header">
+            <div class="logo" style="width: 7em; height: 7em;">
+                <img src="{% static 'assets/images/pti.png' %}" alt="PTI Logo" id="pti-logo">
+            </div> 
+           
+            <div class="contact-info">
+                📞 +234 811 280 6285 (Principal/CE)<br>
+                📞 +234 903 596 6950 (Registrar)<br>
+                www.pti.edu.ng<br>
+                info@pti.edu.ng
+            </div>
+            <div class="email-info">
+                examsandrecord@pti.edu.ng<br>
+                Date: <span id="current-date">{{ today|date:"F d, Y" }}</span>
+            </div>
+        </div>
+        
+        <!-- Reference and Student Info Section -->
+        <div class="reference-section">
+            <div class="reference-left">
+                <div>Our Ref: <span id="student-ref">{{ statement.student.mat_no }}</span></div>
+                <div class="student-info">
+                    <div id="student-name">{{ statement.student.user.username }}</div>
+                    <div class="mat-number" id="mat-number">{{ statement.student.mat_no }}</div>
+                </div>
+            </div>
+            <div class="reference-right">
+                  {% if statement.student.image %}
+
+                    <img src="{{ statement.student.image.url }}"  id="student-photo" class="photo" alt="Student Photo">
+                
+
+                {% else %}
+
+
+                
+                <div class="photo-placeholder" id="photo-container">
+                    <img id="student-photo" class="photo" style="display: none;" alt="Student Photo">
+                    <span id="photo-placeholder-text">PHOTO</span>
+                </div>
+
+
+                {% endif %}
+                
+            </div>
+        </div>
+        
+        <!-- Greeting -->
+        <div class="greeting">Dear Sir/Madam,</div>
+        
+        <!-- Main Content -->
+        <div class="notification-title">NOTIFICATION OF RESULT</div>
+        <div class="exam-title">
+            {{statement.programme}} FINAL EXAMINATIONS<br>
+            <span id="academic-session">{{statement.academic_session}} ACADEMIC SESSION</span>
+        </div>
+        
+        <div class="content-paragraph">
+            I am pleased to inform you that you have satisfied the Examiners and Academic Board in the {{statement.programme}} final examinations held in <span id="exam-session">{{statement.academic_session}}</span> Academic Session.
+        </div>
+        
+        <div class="content-paragraph">
+            You have therefore been awarded the {{statement.programme}} in <strong id="programme">{{statement.student.department}}</strong> with <strong id="grade">{{statement.grade}}</strong> grade as approved by the Academic Board on <span id="approval-date">{{ today|date:"F d, Y" }}</span>. The {{statement.programme}} Certificate will be issued at a later date.
+        </div>
+        
+        <div class="content-paragraph">
+            While congratulating you on behalf of the Academic Board, I wish you success in all your future endeavors.
+        </div>
+        
+        <!-- Signature Section -->
+        <div class="signature-section">
+            <div class="signature-block">
+                <div>Yours faithfully,</div>
+                <div class="signature-line">
+                    <img src="{% static 'assets/signatures/signature.png' %}" alt="Registrar Signature" style="height:60px; display:block; margin-bottom:5px;">
+                    <span id="signature-date">{{ today|date:"F d, Y" }}</span>
+                </div>
+                <div class="registrar-info">
+                    <strong id="registrar-name">MISS HAKEEMAT A. ADELEYE</strong><br>
+                    For: Registrar
+                </div>
+            </div>
+        </div>
+    </div>
+
+      <div class="text-center my-4">
+                <button class="btn btn-primary" onclick="window.print()">Print Statement</button>
+        </div>
+              <!-- End Statement of Result -->
+        
+
+              {% else %}
+                    <br>
+                    <br>
+              <center>
+                <h3> Statement of Result has not been generated</h3>
+              </center>
+            {% endif %}
+</body>
+</html>
+{% endblock %}

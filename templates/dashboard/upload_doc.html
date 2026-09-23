@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="page-body">
+  <div class="container-fluid">
+    <div class="page-title">
+      <div class="row align-items-center">
+        <div class="col">
+          <h2>Upload Document</h2>
+          <p class="mb-0 text-title-gray">Upload your clearance documents here.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-lg-7 col-md-9">
+        <div class="card">
+          <div class="card-header">
+            <h5><i class="fas fa-cloud-upload-alt me-2" style="color:var(--teal);"></i>Upload a Document</h5>
+          </div>
+          <div class="card-body">
+            <form class="row g-3" method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+
+              <div class="col-12">
+                <label class="form-label">Document Title</label>
+                <select class="form-control" name="title" required>
+                  <option value="" disabled selected>Select document type</option>
+                  {% for doctitle in doc_titles %}
+                    <option value="{{ doctitle.id }}">{{ doctitle.title }}</option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <div class="col-12">
+                <label class="form-label">File</label>
+                <div id="drop-zone" class="drop-zone">
+                  <input class="drop-zone__input" type="file" name="file" id="fileInput" required style="display:none;">
+                  <div class="drop-zone__prompt">
+                    <i class="fas fa-cloud-upload-alt" style="font-size:28px;color:var(--teal);margin-bottom:8px;display:block;"></i>
+                    Drag &amp; drop file here, or click to select
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-12 text-end">
+                <button class="btn btn-primary" type="submit">
+                  <i class="fas fa-upload me-1"></i> Submit Document
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .drop-zone {
+    border: 2px dashed var(--teal, #00c3b5);
+    border-radius: 10px;
+    padding: 36px 20px;
+    text-align: center;
+    cursor: pointer;
+    background: rgba(0,195,181,.04);
+    transition: border-color .2s, background .2s;
+  }
+  .drop-zone.dragover {
+    border-color: var(--teal-dark, #00a99d);
+    background: rgba(0,195,181,.10);
+  }
+  .drop-zone__prompt {
+    color: #8898aa;
+    font-size: .9375rem;
+    font-weight: 500;
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var dropZone  = document.getElementById('drop-zone');
+    var fileInput = document.getElementById('fileInput');
+    var prompt    = dropZone.querySelector('.drop-zone__prompt');
+
+    dropZone.addEventListener('click', function () { fileInput.click(); });
+
+    fileInput.addEventListener('change', function () {
+      prompt.innerHTML = fileInput.files.length
+        ? '<i class="fas fa-file-check" style="font-size:24px;color:var(--teal);margin-bottom:6px;display:block;"></i>' + fileInput.files[0].name
+        : '<i class="fas fa-cloud-upload-alt" style="font-size:28px;color:var(--teal);margin-bottom:8px;display:block;"></i>Drag & drop file here, or click to select';
+    });
+
+    dropZone.addEventListener('dragover',  function (e) { e.preventDefault(); dropZone.classList.add('dragover'); });
+    dropZone.addEventListener('dragleave', function ()  { dropZone.classList.remove('dragover'); });
+    dropZone.addEventListener('drop', function (e) {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      if (e.dataTransfer.files.length) {
+        fileInput.files = e.dataTransfer.files;
+        prompt.innerHTML = '<i class="fas fa-file-check" style="font-size:24px;color:var(--teal);margin-bottom:6px;display:block;"></i>' + e.dataTransfer.files[0].name;
+      }
+    });
+  });
+</script>
+
+{% endblock %}

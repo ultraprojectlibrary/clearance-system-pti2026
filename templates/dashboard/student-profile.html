@@ -1,0 +1,187 @@
+
+
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="page-body">
+  <div class="container-fluid">
+    <div class="page-title">
+      <div class="row">
+        <div class="col-sm-6 col-12">
+          <h2>Edit Profile</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+          <!-- Container-fluid starts-->
+          <div class="container-fluid">
+            <div class="edit-profile">
+              <div class="row">
+                <div class="col-xl-4">
+                  <div class="card">
+                    <div class="card-header card-no-border pb-0">
+                      <h3 class="card-title mb-0">My Profile</h3>
+                      <div class="card-options"><a class="card-options-collapse" href="#" data-bs-toggle="card-collapse"><i class="fe fe-chevron-up"></i></a><a class="card-options-remove" href="#" data-bs-toggle="card-remove"><i class="fe fe-x"></i></a></div>
+                    </div>
+                    <div class="card-body">
+                      <form>
+                        <div class="row mb-2">
+                          <div class="profile-title">
+                            <div class="d-flex gap-3">                      {% if profile.image %}
+                   <img class="img-70 rounded-circle" alt="profile image" src="{{profile.image.url}}"/>
+
+                   {% else %}
+
+                    <img class="img-70 rounded-circle" alt="profile image" src=""/>
+                   {% endif %}
+                              <div class="flex-grow-1">
+                                <h3 class="mb-1">{{profile.user.username | title}} </h3>
+                                <p>{{profile.user.get_position_display}}</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+              
+                 
+                      </form>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-xl-8">
+                  <form method="POST" enctype="multipart/form-data" class="card">
+
+
+
+
+
+
+
+
+                      {% csrf_token %}
+                      <div class="card-header card-no-border pb-0">
+                          <h3 class="card-title mb-0">Edit Profile</h3>
+                      </div>
+                      <div class="card-body">
+                          <div class="row">
+                              <!-- User fields -->
+                              <div class="col-sm-6 col-md-6">
+                                  <div class="mb-3">
+                                      <label class="form-label">Full Name</label> <br>
+                                    <strong>  {{profile.user.first_name|title}} </strong>
+                                      {% if form.full_name.errors %}
+                                          <div class="text-danger">{{ form.full_name.errors }}</div>
+                                      {% endif %}
+                                  </div>
+                              </div>
+      
+                              <div class="col-sm-6 col-md-6">
+                                  <div class="mb-3">
+                                      <label class="form-label">Email address</label>
+                                      <input class="form-control" type="email" value="{{ profile.user.email }}" readonly />
+                                  </div>
+                              </div>
+      
+                              <!-- Student model fields -->
+                              <div class="col-sm-6 col-md-6">
+                                  <div class="mb-3">
+                                      <label class="form-label">Matric Number</label>
+                                      <input class="form-control" type="text" value="{{ profile.mat_no}}" readonly />
+                                  </div>
+                              </div>
+
+                              <div class="col-sm-6 col-md-6">
+                                  <div class="mb-3">
+                                      <label class="form-label">Level</label>
+                                      <input class="form-control" type="text" value="{{ profile.level}}" readonly />
+                                  </div>
+                              </div>
+
+                              <div class="col-md-6">
+                                  <div class="mb-3">
+                                      <label class="form-label">Department</label>
+                                      <input class="form-control" type="text" value="{{ profile.department }}" readonly />
+                                  </div>
+                              </div>
+
+                              <div class="col-sm-6 col-md-6">
+                                  <div class="mb-3">
+                                      <label class="form-label">First Hostel Room No</label>
+                                      <input class="form-control" type="text" value="{{ profile.first_hostel_room_no|default:'N/A' }}" readonly />
+                                  </div>
+                              </div>
+
+                              <div class="col-sm-6 col-md-6">
+                                  <div class="mb-3">
+                                      <label class="form-label">Last Hostel Room No</label>
+                                      <input class="form-control" type="text" value="{{ profile.last_hostel_room_no|default:'N/A' }}" readonly />
+                                  </div>
+                              </div>
+
+                              <div class="col-md-6">
+                                  <div class="mb-3">
+                                      <label class="form-label">Date of Completion</label>
+                                      <input class="form-control" type="text" value="{{ profile.date_of_completion|date:'Y-m-d'|default:'N/A' }}" readonly />
+                                  </div>
+                              </div>
+      
+                              <div class="col-md-6">
+                                  <div class="mb-3">
+                                      <label class="form-label">Profile Image</label>
+                                      {{ form.image }}
+                                  </div>
+                              </div>
+                              {% comment %} <div class="col-md-6">
+                                  <div class="mb-3">
+                                      <label class="form-label">Signature</label>
+                                      {{ form.signature }}
+                                  </div>
+                              </div>
+       {% endcomment %}
+                     
+      
+                          
+                          </div>
+                      </div>
+                      <div class="card-footer text-end">
+                          <button class="btn btn-primary" type="submit">Update Profile</button>
+                      </div>
+                  </form>
+              </div>
+              </div>
+            </div>
+          </div>
+        </div>
+       
+      </div>
+   
+
+
+
+
+
+
+
+
+
+
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}
+
+

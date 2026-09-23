@@ -1,0 +1,343 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="page-body">
+  <div class="container-fluid">
+    <div class="page-title">
+      <div class="row align-items-center">
+        <div class="col">
+          <h2>
+            {% if user.position == "student" %}My Clearance{% else %}Dashboard{% endif %}
+          </h2>
+          <p class="mb-0 text-title-gray">
+            {% if user.position == "student" %}
+              Track and complete all your clearance steps below.
+            {% else %}
+              Welcome back, <strong style="color:var(--navy);">{{ user.username|title }}</strong>.
+            {% endif %}
+          </p>
+        </div>
+        {% if user.position == "student" %}
+        <div class="col-auto">
+          <a href="{% url 'upload_doc' %}" class="btn btn-primary">
+            <i class="fas fa-cloud-upload-alt"></i> Upload Documents
+          </a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class="container-fluid">
+
+    {% if user.position == "student" %}
+
+    <!-- ═══════════════════════════════
+         STUDENT VIEW
+         ═══════════════════════════════ -->
+
+    <!-- Progress banner — no inline z-index on inner row -->
+    <div class="clearance-progress-banner mb-4">
+      <div class="d-flex align-items-center justify-content-between">
+        <div style="flex:1;">
+          <h3>Clearance Progress</h3>
+          <p>Complete all 7 departments to receive final clearance.</p>
+          <div class="clearance-progress-track">
+            <div class="clearance-progress-fill" id="progressFill" style="width:0%;"></div>
+          </div>
+          <div class="clearance-progress-label mt-2">
+            <span id="progressCount">0</span> of 7 departments cleared
+          </div>
+        </div>
+        <div class="d-none d-md-block ms-4" style="opacity:.14;flex-shrink:0;">
+          <i class="fas fa-graduation-cap" style="font-size:72px;color:#fff;"></i>
+        </div>
+      </div>
+    </div>
+
+    <!-- Department clearance list -->
+    <div class="row g-3" id="deptList">
+
+      <div class="col-12">
+        <div class="dept-row-card {% if clearance_data.hod.status == 'approved' %}approved{% else %}pending{% endif %}">
+          <div class="dept-icon-box">
+            {% if clearance_data.hod.image %}<img src="{{ clearance_data.hod.image }}" alt="HOD"/>
+            {% else %}<img src="{% static clearance_data.hod.default_image %}" alt="HOD"/>{% endif %}
+          </div>
+          <div class="dept-info">
+            <h6>{{ clearance_data.hod.name }}</h6>
+            <p>{{ clearance_data.hod.staff_name }}</p>
+          </div>
+          <div class="dept-status-badge">
+            {% if clearance_data.hod.feedback %}<span class="badge" style="background:var(--info-light);color:var(--info);"><i class="fas fa-comment"></i> {{ clearance_data.hod.feedback|length }}</span>{% endif %}
+            {% if clearance_data.hod.status == 'approved' %}<span class="status-pill approved"><i class="fas fa-check-circle"></i> Approved</span>
+            {% else %}<span class="status-pill pending"><i class="fas fa-clock"></i> Pending</span>{% endif %}
+            <a href="{% url 'view_clearance_detail' 'hod' %}" class="dept-action-btn"><i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="dept-row-card {% if clearance_data.sug.status == 'approved' %}approved{% else %}pending{% endif %}">
+          <div class="dept-icon-box">
+            {% if clearance_data.sug.image %}<img src="{{ clearance_data.sug.image }}" alt="Entrepreneurship"/>
+            {% else %}<img src="{% static clearance_data.sug.default_image %}" alt="Entrepreneurship"/>{% endif %}
+          </div>
+          <div class="dept-info">
+            <h6>{{ clearance_data.sug.name }}</h6>
+            <p>{{ clearance_data.sug.staff_name }}</p>
+          </div>
+          <div class="dept-status-badge">
+            {% if clearance_data.sug.feedback %}<span class="badge" style="background:var(--info-light);color:var(--info);"><i class="fas fa-comment"></i> {{ clearance_data.sug.feedback|length }}</span>{% endif %}
+            {% if clearance_data.sug.status == 'approved' %}<span class="status-pill approved"><i class="fas fa-check-circle"></i> Approved</span>
+            {% else %}<span class="status-pill pending"><i class="fas fa-clock"></i> Pending</span>{% endif %}
+            <a href="{% url 'view_clearance_detail' 'sug' %}" class="dept-action-btn"><i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="dept-row-card {% if clearance_data.library.status == 'approved' %}approved{% else %}pending{% endif %}">
+          <div class="dept-icon-box">
+            {% if clearance_data.library.image %}<img src="{{ clearance_data.library.image }}" alt="Library"/>
+            {% else %}<img src="{% static clearance_data.library.default_image %}" alt="Library"/>{% endif %}
+          </div>
+          <div class="dept-info">
+            <h6>{{ clearance_data.library.name }}</h6>
+            <p>{{ clearance_data.library.staff_name }}</p>
+          </div>
+          <div class="dept-status-badge">
+            {% if clearance_data.library.feedback %}<span class="badge" style="background:var(--info-light);color:var(--info);"><i class="fas fa-comment"></i> {{ clearance_data.library.feedback|length }}</span>{% endif %}
+            {% if clearance_data.library.status == 'approved' %}<span class="status-pill approved"><i class="fas fa-check-circle"></i> Approved</span>
+            {% else %}<span class="status-pill pending"><i class="fas fa-clock"></i> Pending</span>{% endif %}
+            <a href="{% url 'view_clearance_detail' 'library' %}" class="dept-action-btn"><i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="dept-row-card {% if clearance_data.sport_director.status == 'approved' %}approved{% else %}pending{% endif %}">
+          <div class="dept-icon-box">
+            {% if clearance_data.sport_director.image %}<img src="{{ clearance_data.sport_director.image }}" alt="Sports"/>
+            {% else %}<img src="{% static clearance_data.sport_director.default_image %}" alt="Sports"/>{% endif %}
+          </div>
+          <div class="dept-info">
+            <h6>{{ clearance_data.sport_director.name }}</h6>
+            <p>{{ clearance_data.sport_director.staff_name }}</p>
+          </div>
+          <div class="dept-status-badge">
+            {% if clearance_data.sport_director.feedback %}<span class="badge" style="background:var(--info-light);color:var(--info);"><i class="fas fa-comment"></i> {{ clearance_data.sport_director.feedback|length }}</span>{% endif %}
+            {% if clearance_data.sport_director.status == 'approved' %}<span class="status-pill approved"><i class="fas fa-check-circle"></i> Approved</span>
+            {% else %}<span class="status-pill pending"><i class="fas fa-clock"></i> Pending</span>{% endif %}
+            <a href="{% url 'view_clearance_detail' 'sport_director' %}" class="dept-action-btn"><i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="dept-row-card {% if clearance_data.student_affair.status == 'approved' %}approved{% else %}pending{% endif %}">
+          <div class="dept-icon-box">
+            <img src="{% static clearance_data.student_affair.image %}" alt="Student Affairs"/>
+          </div>
+          <div class="dept-info">
+            <h6>{{ clearance_data.student_affair.name }}</h6>
+            <p>{{ clearance_data.student_affair.staff_name }}</p>
+          </div>
+          <div class="dept-status-badge">
+            {% if clearance_data.student_affair.feedback %}<span class="badge" style="background:var(--info-light);color:var(--info);"><i class="fas fa-comment"></i> {{ clearance_data.student_affair.feedback|length }}</span>{% endif %}
+            {% if clearance_data.student_affair.status == 'approved' %}<span class="status-pill approved"><i class="fas fa-check-circle"></i> Approved</span>
+            {% else %}<span class="status-pill pending"><i class="fas fa-clock"></i> Pending</span>{% endif %}
+            <a href="{% url 'view_clearance_detail' 'student_affair' %}" class="dept-action-btn"><i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="dept-row-card {% if clearance_data.exam_record.status == 'approved' %}approved{% else %}pending{% endif %}">
+          <div class="dept-icon-box">
+            <img src="{% static clearance_data.exam_record.image %}" alt="Exam Records"/>
+          </div>
+          <div class="dept-info">
+            <h6>{{ clearance_data.exam_record.name }}</h6>
+            <p>{{ clearance_data.exam_record.staff_name }}</p>
+          </div>
+          <div class="dept-status-badge">
+            {% if clearance_data.exam_record.feedback %}<span class="badge" style="background:var(--info-light);color:var(--info);"><i class="fas fa-comment"></i> {{ clearance_data.exam_record.feedback|length }}</span>{% endif %}
+            {% if clearance_data.exam_record.status == 'approved' %}<span class="status-pill approved"><i class="fas fa-check-circle"></i> Approved</span>
+            {% else %}<span class="status-pill pending"><i class="fas fa-clock"></i> Pending</span>{% endif %}
+            <a href="{% url 'view_clearance_detail' 'exam_record' %}" class="dept-action-btn"><i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12">
+        <div class="dept-row-card {% if clearance_data.hostel.status == 'approved' %}approved{% else %}pending{% endif %}">
+          <div class="dept-icon-box">
+            <img src="{% static clearance_data.hostel.image %}" alt="Hostel"/>
+          </div>
+          <div class="dept-info">
+            <h6>{{ clearance_data.hostel.name }}</h6>
+            <p>{{ clearance_data.hostel.staff_name }}</p>
+          </div>
+          <div class="dept-status-badge">
+            {% if clearance_data.hostel.feedback %}<span class="badge" style="background:var(--info-light);color:var(--info);"><i class="fas fa-comment"></i> {{ clearance_data.hostel.feedback|length }}</span>{% endif %}
+            {% if clearance_data.hostel.status == 'approved' %}<span class="status-pill approved"><i class="fas fa-check-circle"></i> Approved</span>
+            {% else %}<span class="status-pill pending"><i class="fas fa-clock"></i> Pending</span>{% endif %}
+            <a href="{% url 'view_clearance_detail' 'hostel' %}" class="dept-action-btn"><i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /row #deptList -->
+
+    <!-- Progress script runs AFTER all cards are in the DOM -->
+    <script>
+    (function () {
+      var approved = document.querySelectorAll('#deptList .dept-row-card.approved').length;
+      var fill  = document.getElementById('progressFill');
+      var count = document.getElementById('progressCount');
+      if (fill)  fill.style.width = Math.round(approved / 7 * 100) + '%';
+      if (count) count.textContent = approved;
+    })();
+    </script>
+
+    {% else %}
+
+    <!-- ═══════════════════════════════
+         STAFF VIEW
+         ═══════════════════════════════ -->
+
+    <!-- Stat row — uses students context if passed by the view -->
+    <div class="row g-3 mb-4">
+      <div class="col-sm-6 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-icon-box teal"><i class="fas fa-users"></i></div>
+          <div class="stat-info">
+            <h4>{% if students %}{{ students|length }}{% else %}—{% endif %}</h4>
+            <p>Total Students</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-icon-box orange"><i class="fas fa-hourglass-half"></i></div>
+          <div class="stat-info">
+            <h4 id="pendingCount">—</h4>
+            <p>Pending Approvals</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-icon-box green"><i class="fas fa-check-double"></i></div>
+          <div class="stat-info">
+            <h4 id="approvedCount">—</h4>
+            <p>Fully Cleared</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-xl-3">
+        <div class="stat-card">
+          <div class="stat-icon-box navy"><i class="fas fa-building"></i></div>
+          <div class="stat-info">
+            <h4>7</h4>
+            <p>Departments</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Hidden student status data for JS counting -->
+    {% if students %}
+    <div id="studentStatusData" style="display:none;">
+      {% for student in students %}
+        <span data-status="{{ student.overall_clearance_status }}"></span>
+      {% endfor %}
+    </div>
+    <script>
+    (function () {
+      var items    = document.querySelectorAll('#studentStatusData span');
+      var approved = 0, pending = 0;
+      items.forEach(function(el) {
+        var s = el.getAttribute('data-status');
+        if (s === 'Completely Approved') approved++;
+        else pending++;
+      });
+      var pc = document.getElementById('pendingCount');
+      var ac = document.getElementById('approvedCount');
+      if (pc) pc.textContent = pending;
+      if (ac) ac.textContent = approved;
+    })();
+    </script>
+    {% endif %}
+
+    <!-- Quick actions -->
+    <div class="row g-3">
+      <div class="col-lg-8">
+        <div class="card h-100">
+          <div class="card-header">
+            <h5><i class="fas fa-bolt me-2" style="color:var(--teal);"></i>Quick Actions</h5>
+          </div>
+          <div class="card-body">
+            <div class="row g-3">
+              <div class="col-sm-6">
+                <a href="{% url 'student_doc' %}" class="dept-row-card" style="text-decoration:none;">
+                  <div class="dept-icon-box"><i class="fas fa-folder-open"></i></div>
+                  <div class="dept-info"><h6>Student Documents</h6><p>Review uploaded files</p></div>
+                  <div class="dept-action-btn"><i class="fas fa-arrow-right"></i></div>
+                </a>
+              </div>
+              {% if user.position == "exams_records" %}
+              <div class="col-sm-6">
+                <a href="{% url 'statement_list' %}" class="dept-row-card" style="text-decoration:none;">
+                  <div class="dept-icon-box"><i class="fas fa-file-alt"></i></div>
+                  <div class="dept-info"><h6>Generated SORs</h6><p>Statement of Results</p></div>
+                  <div class="dept-action-btn"><i class="fas fa-arrow-right"></i></div>
+                </a>
+              </div>
+              {% endif %}
+              <div class="col-sm-6">
+                <a href="{% url 'send_announcement' %}" class="dept-row-card" style="text-decoration:none;">
+                  <div class="dept-icon-box"><i class="fas fa-bullhorn"></i></div>
+                  <div class="dept-info"><h6>Announcements</h6><p>Send to students</p></div>
+                  <div class="dept-action-btn"><i class="fas fa-arrow-right"></i></div>
+                </a>
+              </div>
+              <div class="col-sm-6">
+                <a href="{% url 'profile' %}" class="dept-row-card" style="text-decoration:none;">
+                  <div class="dept-icon-box"><i class="fas fa-user-circle"></i></div>
+                  <div class="dept-info"><h6>My Profile</h6><p>Update your details</p></div>
+                  <div class="dept-action-btn"><i class="fas fa-arrow-right"></i></div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <div class="card h-100" style="background:linear-gradient(160deg,var(--navy) 0%,var(--navy-700) 100%) !important;border:none !important;">
+          <div class="card-body" style="padding:28px 24px !important;">
+            <div style="width:52px;height:52px;border-radius:12px;background:rgba(0,195,181,.18);display:flex;align-items:center;justify-content:center;margin-bottom:20px;">
+              <i class="fas fa-shield-alt" style="font-size:22px;color:var(--teal);"></i>
+            </div>
+            <h5 style="color:#fff !important;font-size:1rem !important;margin-bottom:8px !important;">PTI Clearance System</h5>
+            <p style="color:rgba(255,255,255,.55) !important;font-size:13px !important;line-height:1.7 !important;margin-bottom:24px !important;">
+              Logged in as <strong style="color:rgba(255,255,255,.85);">{{ user.username|title }}</strong>.
+              Manage student clearances from your department.
+            </p>
+            <a href="{% url 'student_doc' %}" class="btn btn-primary" style="width:100%;">
+              <i class="fas fa-search me-1"></i> Review Documents
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {% endif %}
+
+  </div><!-- /container-fluid -->
+</div><!-- /page-body -->
+
+{% endblock %}

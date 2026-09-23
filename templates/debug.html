@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Registration</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .error { color: red; }
+        .success { color: green; }
+        .info { color: blue; }
+    </style>
+</head>
+<body>
+    <h1>Registration Debug Page</h1>
+    
+    {% if error %}
+        <div class="error">
+            <h2>Error:</h2>
+            <p>{{ error }}</p>
+        </div>
+    {% else %}
+        <div class="success">
+            <h2>Database Status:</h2>
+            <p>Departments found: {{ departments_count }}</p>
+            <p>Levels found: {{ levels_count }}</p>
+        </div>
+        
+        <div class="info">
+            <h3>Departments:</h3>
+            <ul>
+                {% for dept in departments %}
+                    <li>{{ dept.title }} (ID: {{ dept.id }})</li>
+                {% empty %}
+                    <li>No departments found</li>
+                {% endfor %}
+            </ul>
+            
+            <h3>Levels:</h3>
+            <ul>
+                {% for level in levels %}
+                    <li>{{ level.title }} (ID: {{ level.id }})</li>
+                {% empty %}
+                    <li>No levels found</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    
+    <hr>
+    <p><a href="{% url 'register' %}">Go to Registration</a></p>
+    <p><a href="{% url 'login' %}">Go to Login</a></p>
+    <p><a href="{% url 'index' %}">Go to Home</a></p>
+</body>
+</html>
