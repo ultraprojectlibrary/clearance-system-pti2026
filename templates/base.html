@@ -96,86 +96,145 @@
 
       <div class="page-body-wrapper">
 
-        <!-- ============ BOTTOM NAV ============ -->
-        <nav class="mobile-bottom-nav">
-          <ul class="nav-list">
-            
-            <li class="nav-item">
-              <a href="{% url 'dashboard' %}" class="nav-link">
-                <i class="fas fa-th-large"></i>
-                <span>Home</span>
-              </a>
-            </li>
+        <!-- ============ SIDEBAR ============ -->
+        <aside class="page-sidebar">
+          <div class="left-arrow" id="left-arrow"></div>
+          <div class="main-sidebar" id="main-sidebar">
+            <ul class="sidebar-menu" id="simple-bar">
 
-            {% if user.position == "student" %}
-            <li class="nav-item">
-              <a href="{% url 'upload_doc' %}" class="nav-link">
-                <i class="fas fa-cloud-upload-alt"></i>
-                <span>Upload</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="{% url 'my_doc' %}" class="nav-link">
-                <i class="fas fa-folder-open"></i>
-                <span>My Docs</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="{% url 'statement_result' %}" class="nav-link">
-                <i class="fas fa-file-alt"></i>
-                <span>Result</span>
-              </a>
-            </li>
-            {% elif user.position == "student_affair" or user.position == "exams_records" %}
-            <li class="nav-item">
-              <a href="{% url 'student_doc' %}" class="nav-link">
-                <i class="fas fa-users"></i>
-                <span>Students</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="{% url 'send_announcement' %}" class="nav-link">
-                <i class="fas fa-bullhorn"></i>
-                <span>Broadcast</span>
-              </a>
-            </li>
-            {% if user.position == "exams_records" %}
-            <li class="nav-item">
-              <a href="{% url 'statement_list' %}" class="nav-link">
-                <i class="fas fa-list-alt"></i>
-                <span>SORs</span>
-              </a>
-            </li>
-            {% endif %}
-            {% else %}
-            <li class="nav-item">
-              <a href="{% url 'student_doc' %}" class="nav-link">
-                <i class="fas fa-users"></i>
-                <span>Students</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="{% url 'send_announcement' %}" class="nav-link">
-                <i class="fas fa-bullhorn"></i>
-                <span>Broadcast</span>
-              </a>
-            </li>
-            {% endif %}
+              <li class="pin-title sidebar-main-title">
+                <div>
+                  <h5 class="sidebar-title f-w-700">Navigation</h5>
+                </div>
+              </li>
 
-            <li class="nav-item">
+              <li class="sidebar-list">
+                <a class="sidebar-link" href="{% url 'dashboard' %}">
+                  <i class="fas fa-th-large"></i>
+                  <h6 class="f-w-150">Dashboard</h6>
+                </a>
+              </li>
+
               {% if user.position == "student" %}
-              <a href="{% url 'student_profile' %}" class="nav-link">
-              {% else %}
-              <a href="{% url 'profile' %}" class="nav-link">
-              {% endif %}
-                <i class="fas fa-user-circle"></i>
-                <span>Profile</span>
-              </a>
-            </li>
 
-          </ul>
-        </nav>
-        <!-- ============ /BOTTOM NAV ============ -->
+              <li class="sidebar-list">
+                <a class="sidebar-link" href="{% url 'upload_doc' %}">
+                  <i class="fas fa-cloud-upload-alt"></i>
+                  <h6 class="f-w-150">Upload Documents</h6>
+                </a>
+              </li>
+
+              <li class="sidebar-list">
+                <a class="sidebar-link" href="{% url 'my_doc' %}">
+                  <i class="fas fa-folder-open"></i>
+                  <h6 class="f-w-150">My Documents</h6>
+                </a>
+              </li>
+
+              <li class="sidebar-list">
+                <a class="sidebar-link" href="{% url 'statement_result' %}">
+                  <i class="fas fa-file-alt"></i>
+                  <h6 class="f-w-150">Statement of Result</h6>
+                </a>
+              </li>
+
+              <li class="sidebar-list">
+                <a class="sidebar-link" href="{% url 'student_profile' %}">
+                  <i class="fas fa-user-circle"></i>
+                  <h6 class="f-w-150">Profile</h6>
+                </a>
+              </li>
+
+              {% elif user.position == "student_affair" %}
+
+              <li class="sidebar-list">
+                <a class="sidebar-link" href="{% url 'student_doc' %}">
+                  <i class="fas fa-users"></i>
+                  <h6 class="f-w-600">Student Documents</h6>
+                </a>
+              </li>
+
+              <li class="sidebar-list">
+                <a class="sidebar-link" href="{% url 'send_announcement' %}">
+                  <i class="fas fa-bullhorn"></i>
+                  <h6 class="f-w-600">Announcements</h6>
+                </a>
+              </li>
+
+              <li class="sidebar-list">
+                <a class="sidebar-link" href="{% url 'profile' %}">
+                  <i class="fas fa-user-circle"></i>
+                  <h6 class="f-w-150">Profile</h6>
+                </a>
+              </li>
+
+              {% elif user.position == "exams_records" %}
+
+              <li class="sidebar-list">
+                <a class="sidebar-link" href="{% url 'student_doc' %}">
+                  <i class="fas fa-users"></i>
+                  <h6 class="f-w-600">Student Documents</h6>
+                </a>
+              </li>
+
+              <li class="sidebar-list">
+                <a class="sidebar-link" href="{% url 'statement_list' %}">
+                  <i class="fas fa-list-alt"></i>
+                  <h6 class="f-w-150">Generated SORs</h6>
+                </a>
+              </li>
+
+              <li class="sidebar-list">
+                <a class="sidebar-link" href="{% url 'send_announcement' %}">
+                  <i class="fas fa-bullhorn"></i>
+                  <h6 class="f-w-600">Announcements</h6>
+                </a>
+              </li>
+
+              <li class="sidebar-list">
+                <a class="sidebar-link" href="{% url 'profile' %}">
+                  <i class="fas fa-user-circle"></i>
+                  <h6 class="f-w-150">Profile</h6>
+                </a>
+              </li>
+
+              {% else %}
+
+              <li class="sidebar-list">
+                <a class="sidebar-link" href="{% url 'student_doc' %}">
+                  <i class="fas fa-users"></i>
+                  <h6 class="f-w-600">Student Documents</h6>
+                </a>
+              </li>
+
+              <li class="sidebar-list">
+                <a class="sidebar-link" href="{% url 'send_announcement' %}">
+                  <i class="fas fa-bullhorn"></i>
+                  <h6 class="f-w-600">Announcements</h6>
+                </a>
+              </li>
+
+              <li class="sidebar-list">
+                <a class="sidebar-link" href="{% url 'profile' %}">
+                  <i class="fas fa-user-circle"></i>
+                  <h6 class="f-w-150">Profile</h6>
+                </a>
+              </li>
+
+              {% endif %}
+
+              <li class="sidebar-list">
+                <a class="sidebar-link" href="{% url 'logout' %}">
+                  <i class="fas fa-sign-out-alt"></i>
+                  <h6 class="f-w-150">Logout</h6>
+                </a>
+              </li>
+
+            </ul>
+          </div>
+          <div class="right-arrow" id="right-arrow"></div>
+        </aside>
+        <!-- ============ /SIDEBAR ============ -->
 
         {% block content %}
         {% endblock content %}
@@ -267,33 +326,5 @@
       });
     </script>
 
-    <!-- WebView Push Notification Listener -->
-    <script>
-      document.addEventListener('message', function(event) {
-        try {
-          const data = JSON.parse(event.data);
-          if (data.type === 'PUSH_TOKEN' && data.token) {
-            // Send token to our Django backend
-            fetch("{% url 'save_push_token' %}", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": "{{ csrf_token }}"
-              },
-              body: JSON.stringify({ expo_push_token: data.token })
-            })
-            .then(res => res.json())
-            .then(data => console.log("Push token saved", data))
-            .catch(err => console.error("Error saving token", err));
-          }
-        } catch (e) {
-          console.error("Error parsing message from WebView", e);
-        }
-      });
-      // Also support iOS window.ReactNativeWebView.postMessage fallback
-      window.addEventListener('message', function(event) {
-        // Handle iOS postMessage similarly if needed
-      });
-    </script>
 </body>
 </html>

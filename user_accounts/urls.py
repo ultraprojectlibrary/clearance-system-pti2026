@@ -22,8 +22,7 @@ from .views import (
     statement_result_list,
     statement_result_detail,
     send_announcement,
-    view_clearance_detail,
-    save_push_token
+    view_clearance_detail
 )
 
 
@@ -58,6 +57,5 @@ urlpatterns = [
     path('clearance/<str:department>/', view_clearance_detail, name='view_clearance_detail'),
     path('statements/', statement_result_list, name='statement_list'),
     path('statements/<int:pk>/view/', statement_result_detail, name='statement_detail'),
-    path('api/save-token/', save_push_token, name='save_push_token'),
 
 ]
